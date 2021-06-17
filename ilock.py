@@ -6,10 +6,12 @@ import subprocess
 from datetime import datetime
 from dotenv import load_dotenv
 
+from utils import getASCII
+
 load_dotenv()
 
 IP = os.environ.get("PHONE_IP")
-
+TIMER = int(os.environ.get("TIMER"))
 
 def ping_phone():
     # Pings amount param.
@@ -33,7 +35,7 @@ def ping_phone():
         return
 
     # Periodically ping Phone.
-    threading.Timer(20, ping_phone).start()
+    threading.Timer(TIMER, ping_phone).start()
 
 
 def lock_windows():
@@ -41,6 +43,8 @@ def lock_windows():
 
 
 def main():
+    print(getASCII())
+    print(f'Target: {IP}\nChecking every: {TIMER}s\nPlatform: {platform.system()}\nStarting device detection...\n')
     ping_phone()
 
 
