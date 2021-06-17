@@ -12,10 +12,12 @@ load_dotenv()
 
 IP = os.environ.get("PHONE_IP")
 TIMER = int(os.environ.get("TIMER"))
+PLATFORM = platform.system()
+
 
 def ping_phone():
     # Pings amount param.
-    param = '-n' if platform.system().lower() == 'windows' else '-c'
+    param = '-n' if PLATFORM == 'Windows' else '-c'
     # Ping command.
     command = ['ping', param, '1', IP]
     # Pinging Phone.
@@ -31,7 +33,12 @@ def ping_phone():
         # Log phone undetection.
         print(f'{now}: Phone not detected, locking computer.')
         # Lock computer.
-        lock_windows()
+
+        if PLATFORM == 'Windows':
+            lock_windows()
+        elif PLATFORM == 'Darwin':
+            lock_mac()
+
         return
 
     # Periodically ping Phone.
@@ -42,9 +49,15 @@ def lock_windows():
     ctypes.windll.user32.LockWorkStation()
 
 
+def lock_mac():
+    ctypes.CDLL(
+        '/System/Library/PrivateFrameworks/login.framework/Versions/Current/login').SACLockScreenImmediate()
+
+
 def main():
     print(getASCII())
-    print(f'Target: {IP}\nChecking every: {TIMER}s\nPlatform: {platform.system()}\nStarting device detection...\n')
+    print(
+        f'Target: {IP}\nChecking every: {TIMER}s\nPlatform: {PLATFORM}\nStarting device detection...\n')
     ping_phone()
 
 
