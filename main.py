@@ -17,7 +17,7 @@ def ping_phone():
   # Ping command.
   command = ['ping', param, '1', IP]
   # Pinging Phone. 
-  result = subprocess.call(command) == 0
+  result = subprocess.run(command).returncode == 0
   # Get and parse current time.
   now = datetime.now().strftime("%d/%m/%Y - %H:%M:%S")
 
